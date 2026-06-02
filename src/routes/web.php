@@ -28,6 +28,12 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard.user');
     
     // Nanti kita tambahkan route untuk task, pomodoro, dll
+    Route::post('/logout', function (\Illuminate\Http\Request $request) {
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
 });
 
 Route::get('/', function () {
