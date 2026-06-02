@@ -66,4 +66,31 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return true;
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function pomodoroSessions()
+    {
+        return $this->hasMany(PomodoroSession::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')->withPivot('earned_at');
+    }
+
+    public function challenges()
+    {
+        return $this->belongsToMany(Challenge::class, 'user_challenges')
+            ->withPivot('status', 'progress_hours', 'joined_at', 'completed_at')
+            ->withTimestamps();
+    }
+
+    public function reminderLogs()
+    {
+        return $this->hasMany(ReminderLog::class);
+    }
 }

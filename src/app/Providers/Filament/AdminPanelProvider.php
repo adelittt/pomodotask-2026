@@ -21,6 +21,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Illuminate\Support\Facades\Gate;
+use Filament\Widgets\StatsOverviewWidget;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,7 +40,11 @@ class AdminPanelProvider extends PanelProvider
             ->defaultThemeMode(ThemeMode::Light)
             ->font('Montserrat')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::hex('#FF824E'), // atau pilih dari Color::Pink, dll
+                // Tapi agar lebih fleksibel, daftarkan semua warna pastel sebagai 'danger', 'success', dll
+                'danger'  => Color::hex('#FFB3BA'),
+                'success' => Color::hex('#BAFFC9'),
+                'warning' => Color::hex('#FFFFBA'),
             ])
             ->maxContentWidth(MaxWidth::SevenExtraLarge)
             ->sidebarCollapsibleOnDesktop()
@@ -50,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
+                StatsOverviewWidget::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make()
@@ -109,7 +117,7 @@ class AdminPanelProvider extends PanelProvider
             ->resources([
                 config('filament-logger.activity_resource'),
             ])
-            ->viteTheme('resources/css/filament/admin/theme.css')
+        //    ->viteTheme('resources/css/filament/admin/theme.css')
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -126,4 +134,12 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
     }
+    public function boot()
+    {
+        // Proteksi: hanya user dengan role 'super_admin' atau 'admin' yang boleh mengakses panel ini
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            return ($user->hasRole('super_admin') || $user->hasRole('admin')) ? true : null;
+        });
+    }
+
 }
