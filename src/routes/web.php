@@ -22,6 +22,32 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login')->middleware('guest');
+
+Route::post('/login', function (\Illuminate\Http\Request $request) {
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (auth()->attempt($credentials)) {
+        $request->session()->regenerate();
+        
+        // Redirect logic based on role
+        if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')) {
+            return redirect()->intended('/admin');
+        }
+        
+        return redirect()->intended('/dashboard');
+    }
+
+    return back()->withErrors([
+        'email' => 'Kredensial yang diberikan tidak cocok dengan data kami.',
+    ])->onlyInput('email');
+});
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard-user');
