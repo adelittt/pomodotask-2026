@@ -63,7 +63,7 @@ class UserChallengePolicy
      */
     public function forceDelete(User $user, UserChallenge $userChallenge): bool
     {
-        return $user->can('force_delete_');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class UserChallengePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class UserChallengePolicy
      */
     public function restore(User $user, UserChallenge $userChallenge): bool
     {
-        return $user->can('restore_');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class UserChallengePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class UserChallengePolicy
      */
     public function replicate(User $user, UserChallenge $userChallenge): bool
     {
-        return $user->can('replicate_');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class UserChallengePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_');
+        return $user->can('{{ Reorder }}');
     }
 }

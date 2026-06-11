@@ -34,11 +34,21 @@ class ChallengeResource extends Resource
                     ->required()
                     ->default(20)
                     ->label('Target Jam'),
-                Forms\Components\TextInput::make('duration_weeks')
+                Forms\Components\TextInput::make('duration_value')
+                    ->label('Durasi')
                     ->numeric()
                     ->required()
-                    ->default(1)
-                    ->label('Durasi (Minggu)'),
+                    ->minValue(1)
+                    ->default(1),
+                Forms\Components\Select::make('duration_unit')
+                    ->label('Satuan Durasi')
+                    ->options([
+                        'days' => 'Hari',
+                        'weeks' => 'Minggu',
+                        'months' => 'Bulan',
+                    ])
+                    ->required()
+                    ->default('weeks'),
                 Forms\Components\Select::make('badge_id')
                     ->relationship('badge', 'name')
                     ->label('Hadiah Badge')

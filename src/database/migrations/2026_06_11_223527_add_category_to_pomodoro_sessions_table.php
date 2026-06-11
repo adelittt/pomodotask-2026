@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('color')->default('#FFD1DC'); // Default pastel pink
-            $table->timestamps();
+        Schema::table('pomodoro_sessions', function (Blueprint $table) {
+            $table->string('category')->nullable()->after('type');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('pomodoro_sessions', function (Blueprint $table) {
+            $table->dropColumn('category');
+        });
     }
 };

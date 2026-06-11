@@ -9,9 +9,12 @@ use App\Models\UserBadge;
 use App\Models\UserChallenge;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 
 class DashboardStatistic extends Component
 {
+    #[On('taskUpdated')]
+    #[On('sessionCompleted')]
     public function render()
     {
         $userId = auth()->id();

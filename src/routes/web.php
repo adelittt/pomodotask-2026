@@ -18,13 +18,15 @@ Livewire::setScriptRoute(function ($handle) {
 /*
 / END
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register')->middleware('guest');
 
 Route::post('/login', function (\Illuminate\Http\Request $request) {
     $credentials = $request->validate([
@@ -35,12 +37,17 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
     if (auth()->attempt($credentials)) {
         $request->session()->regenerate();
         
-        // Redirect logic based on role
+        // Prevent admin from using user login panel
         if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')) {
-            return redirect()->intended('/admin');
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors([
+                'email' => 'Akun Admin tidak bisa login di sini. Silakan login melalui halaman /admin',
+            ])->onlyInput('email');
         }
         
-        return redirect()->intended('/dashboard');
+        return redirect('/dashboard');
     }
 
     return back()->withErrors([
@@ -48,20 +55,52 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
     ])->onlyInput('email');
 });
 
+Route::post('/register', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+    ]);
+
+    $user = \App\Models\User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+    ]);
+
+    $user->assignRole('user');
+
+    auth()->login($user);
+
+    return redirect('/dashboard');
+});
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
+        if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')) {
+            return redirect('/admin');
+        }
+
         return view('dashboard-user');
     })->name('dashboard.user');
-    
-    // Nanti kita tambahkan route untuk task, pomodoro, dll
+
     Route::post('/logout', function (\Illuminate\Http\Request $request) {
         auth()->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+
+        return redirect('/login');
     })->name('logout');
 });
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    if (auth()->check()) {
+        if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')) {
+            return redirect('/admin');
+        }
+
+        return redirect('/dashboard');
+    }
+
+    return redirect('/login');
 });

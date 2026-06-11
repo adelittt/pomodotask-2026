@@ -14,6 +14,8 @@ class Challenge extends Model
         'badge_id',
         'start_date',
         'end_date',
+        'duration_value',
+        'duration_unit',
     ];
 
     protected $casts = [

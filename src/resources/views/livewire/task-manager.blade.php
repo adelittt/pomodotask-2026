@@ -17,7 +17,7 @@
             </div>
         @endif
 
-        <form wire:submit.prevent="{{ $isEditMode ? 'update' : 'store' }}" class="space-y-4">
+        <form wire:submit.prevent="save" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Judul Tugas</label>
                 <input type="text" wire:model="title" placeholder="Belajar Aljabar Linier..." 
@@ -34,15 +34,13 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kategori</label>
-                    <select wire:model="category_id" 
-                        class="w-full bg-[#FFFDF6] border border-pastel-peach/40 focus:border-pastel-blue rounded-xl p-3 text-sm focus:outline-none transition">
-                        <option value="">Tanpa Kategori</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_id') <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Progress Tugas (%)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" wire:model.live="progress" min="0" max="100" step="5"
+                            class="w-full h-2 bg-[#FFE4E8] rounded-lg appearance-none cursor-pointer accent-[#F46B7E]">
+                        <span class="text-sm font-bold text-gray-600 w-10 text-right">{{ $progress ?? 0 }}%</span>
+                    </div>
+                    @error('progress') <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
@@ -67,7 +65,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Target Tomat (Pomodoro)</label>
-                    <input type="number" wire:model="estimated_pomodoros" min="1" max="10"
+                    <input type="number" wire:model="estimated_pomodoros" min="1" max="10" value="1"
                         class="w-full bg-[#FFFDF6] border border-pastel-peach/40 focus:border-pastel-blue rounded-xl p-3 text-sm focus:outline-none transition">
                     @error('estimated_pomodoros') <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> @enderror
                 </div>
@@ -114,7 +112,8 @@
                                 default => 'bg-gray-100 text-gray-600',
                             };
                             
-                            $categoryColor = $task->category->color ?? '#E6E6FA';
+                            $progressVal = $task->progress ?? 0;
+                            $progressColor = $progressVal == 100 ? 'bg-emerald-400' : ($progressVal >= 50 ? 'bg-blue-400' : 'bg-[#F46B7E]');
                         @endphp
                         
                         <div class="p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow transition-all duration-200 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4 {{ $task->status === 'completed' ? 'opacity-65' : '' }}">
@@ -136,13 +135,20 @@
                                         <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase {{ $priorityColor }}">
                                             {{ $task->priority === 'high' ? 'Penting' : ($task->priority === 'medium' ? 'Sedang' : 'Santai') }}
                                         </span>
-                                        @if($task->category)
-                                            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold text-gray-600 border" style="background-color: {{ $categoryColor }}40; border-color: {{ $categoryColor }}aa;">
-                                                🏷️ {{ $task->category->name }}
-                                            </span>
-                                        @endif
+                                        </span>
                                     </div>
                                     <p class="text-sm text-gray-500">{{ $task->description ?: 'Tidak ada deskripsi.' }}</p>
+                                    
+                                    <!-- Progress Bar -->
+                                    <div class="pt-2 pb-1 w-full max-w-xs">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-[10px] font-bold text-gray-400">Progress</span>
+                                            <span class="text-[10px] font-bold text-gray-600">{{ $progressVal }}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                            <div class="{{ $progressColor }} h-1.5 rounded-full transition-all duration-300" style="width: {{ $progressVal }}%"></div>
+                                        </div>
+                                    </div>
                                     
                                     <div class="flex flex-wrap items-center gap-4 text-xs font-bold text-gray-400 pt-1">
                                         <!-- Est Pomodoros tomato icons -->

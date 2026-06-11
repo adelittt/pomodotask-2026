@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PomodoroSession extends Model
 {
     protected $fillable = [
+        'category',
         'user_id',
         'task_id',
         'duration',

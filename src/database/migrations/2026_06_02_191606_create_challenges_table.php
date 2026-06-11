@@ -22,6 +22,11 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('challenges', function (Blueprint $table) {
+            $table->integer('duration_value')->default(1)->after('target_hours');
+            $table->enum('duration_unit', ['days', 'weeks', 'months'])->default('weeks')->after('duration_value');
+        });
     }
 
     /**
@@ -30,5 +35,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('challenges');
+         Schema::table('challenges', function (Blueprint $table) {
+            $table->dropColumn(['duration_value', 'duration_unit']);
+        });
     }
 };
