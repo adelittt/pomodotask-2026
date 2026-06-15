@@ -32,6 +32,19 @@
                 @error('description') <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> @enderror
             </div>
 
+            <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kategori (Opsional)</label>
+                <select wire:model="category" 
+                    class="w-full bg-[#FFFDF6] border border-pastel-peach/40 focus:border-pastel-blue rounded-xl p-3 text-sm focus:outline-none transition">
+                    <option value="">Pilih Kategori...</option>
+                    <option value="Belajar">Belajar</option>
+                    <option value="Kerja">Kerja</option>
+                    <option value="Proyek">Proyek</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+                @error('category') <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> @enderror
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Progress Tugas (%)</label>
@@ -135,7 +148,11 @@
                                         <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase {{ $priorityColor }}">
                                             {{ $task->priority === 'high' ? 'Penting' : ($task->priority === 'medium' ? 'Sedang' : 'Santai') }}
                                         </span>
-                                        </span>
+                                        @if($task->category)
+                                            <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase bg-pastel-lavender/30 text-indigo-500 border border-pastel-lavender">
+                                                {{ $task->category }}
+                                            </span>
+                                        @endif
                                     </div>
                                     <p class="text-sm text-gray-500">{{ $task->description ?: 'Tidak ada deskripsi.' }}</p>
                                     

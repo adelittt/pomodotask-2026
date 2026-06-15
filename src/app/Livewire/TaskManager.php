@@ -10,7 +10,7 @@ class TaskManager extends Component
 {
     use AwardsBadges;
 
-    public $title, $description, $progress, $due_date, $task_id;
+    public $title, $description, $progress, $due_date, $task_id, $category;
     public $priority = 'medium';
     public $estimated_pomodoros = 1;
     public $isEditMode = false;
@@ -21,6 +21,7 @@ class TaskManager extends Component
         'progress' => 'nullable|integer|min:0|max:100',
         'due_date' => 'nullable|date',
         'priority' => 'required|in:low,medium,high',
+        'category' => 'nullable|string',
         'estimated_pomodoros' => 'required|integer|min:1|max:10',
     ];
 
@@ -53,6 +54,7 @@ class TaskManager extends Component
             'progress' => $this->progress ?: 0,
             'due_date' => $this->due_date ?: null,
             'priority' => $this->priority,
+            'category' => $this->category,
             'estimated_pomodoros' => $this->estimated_pomodoros,
             'status' => 'pending',
         ]);
@@ -71,6 +73,7 @@ class TaskManager extends Component
         $this->progress = $task->progress;
         $this->due_date = $task->due_date ? $task->due_date->format('Y-m-d') : null;
         $this->priority = $task->priority;
+        $this->category = $task->category;
         $this->estimated_pomodoros = $task->estimated_pomodoros;
         $this->isEditMode = true;
     }
@@ -86,6 +89,7 @@ class TaskManager extends Component
             'progress' => $this->progress ?: 0,
             'due_date' => $this->due_date ?: null,
             'priority' => $this->priority,
+            'category' => $this->category,
             'estimated_pomodoros' => $this->estimated_pomodoros,
         ]);
 
@@ -122,6 +126,7 @@ class TaskManager extends Component
         $this->progress = 0;
         $this->due_date = '';
         $this->priority = 'medium';
+        $this->category = null;
         $this->estimated_pomodoros = 1;
         $this->task_id = null;
         $this->isEditMode = false;

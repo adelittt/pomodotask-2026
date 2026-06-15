@@ -6,10 +6,7 @@
             <p class="text-gray-500 text-sm mt-1 font-medium">Mari fokus dan selesaikan lebih banyak hari ini!</p>
         </div>
         <div class="flex items-center gap-4">
-            <button class="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center relative shadow-sm text-gray-400 hover:text-red-400 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-400 rounded-full border border-white"></span>
-            </button>
+            @livewire('notification-dropdown')
             <div class="flex items-center gap-2 bg-white border border-gray-100 px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-gray-600">
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 {{ now()->translatedFormat('l, j F Y') }}
@@ -142,44 +139,59 @@
                         $progressVal = $task->progress ?? 0;
                         $progressColor = $progressVal == 100 ? 'bg-emerald-400' : ($progressVal >= 50 ? 'bg-blue-400' : 'bg-[#F46B7E]');
                     @endphp
-                    <div class="flex flex-col p-3 hover:bg-gray-50 rounded-2xl transition cursor-pointer gap-2 border border-transparent hover:border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <button wire:click="toggleStatus({{ $task->id }})" class="w-5 h-5 flex-shrink-0 rounded-full border-[2.5px] hover:bg-gray-100 transition focus:outline-none flex items-center justify-center {{ $task->priority == 'high' ? 'border-red-400' : ($task->priority == 'medium' ? 'border-yellow-400' : 'border-green-400') }}">
+                    <div @click="promptTaskSession('{{ $task->id }}', '{{ addslashes($task->title) }}')" 
+                         class="group relative flex flex-col p-4 bg-white hover:bg-gray-50/80 rounded-2xl transition-all cursor-pointer gap-4 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md">
+
+                        <div class="flex items-start justify-between w-full gap-4">
+                            <div class="flex items-start gap-3 flex-1 min-w-0">
+                                <button wire:click.stop="toggleStatus({{ $task->id }})" class="mt-0.5 w-5 h-5 flex-shrink-0 rounded-full border-[2.5px] bg-white hover:bg-gray-50 transition focus:outline-none flex items-center justify-center {{ $task->priority == 'high' ? 'border-red-400' : ($task->priority == 'medium' ? 'border-yellow-400' : 'border-green-400') }}">
                                     @if($task->status === 'completed')
                                         <div class="w-3 h-3 rounded-full {{ $task->priority == 'high' ? 'bg-red-400' : ($task->priority == 'medium' ? 'bg-yellow-400' : 'bg-green-400') }}"></div>
                                     @endif
                                 </button>
-                                <span class="text-sm font-bold text-gray-700 truncate max-w-[150px] sm:max-w-[200px] {{ $task->status === 'completed' ? 'line-through text-gray-400' : '' }}">{{ $task->title }}</span>
+                                <div class="flex flex-col gap-1 w-full">
+                                    <span class="text-sm font-bold text-gray-800 leading-tight {{ $task->status === 'completed' ? 'line-through text-gray-400' : '' }} group-hover:text-[#F46B7E] transition-colors truncate">{{ $task->title }}</span>
+                                    <div class="flex items-center gap-2 mt-0.5">
+                                        <span class="text-xs font-bold text-gray-500 flex items-center gap-1">🗓️ {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M') : '-' }}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                @if($task->priority == 'high')
-                                    <span class="text-[10px] font-bold bg-red-50 text-red-500 px-2 py-0.5 rounded-md flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Tinggi</span>
-                                @elseif($task->priority == 'medium')
-                                    <span class="text-[10px] font-bold bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded-md flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Sedang</span>
-                                @else
-                                    <span class="text-[10px] font-bold bg-green-50 text-green-600 px-2 py-0.5 rounded-md flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Rendah</span>
-                                @endif
-                                <span class="text-[10px] font-bold text-gray-400 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M') : '-' }}</span>
+                            
+                            <div class="flex-shrink-0 relative">
+                                <div class="group-hover:opacity-0 transition-opacity duration-200">
+                                    @if($task->priority == 'high')
+                                        <span class="text-xs font-bold bg-red-50 text-red-500 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm"><span class="w-2 h-2 rounded-full bg-red-500"></span> Tinggi</span>
+                                    @elseif($task->priority == 'medium')
+                                        <span class="text-xs font-bold bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Sedang</span>
+                                    @else
+                                        <span class="text-xs font-bold bg-green-50 text-green-600 px-2 py-1 rounded-md flex items-center gap-1 shadow-sm"><span class="w-2 h-2 rounded-full bg-green-500"></span> Rendah</span>
+                                    @endif
+                                </div>
+                                
+                                <div class="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#F46B7E] font-bold text-xs bg-white px-2 py-1 rounded-md shadow-sm border border-[#FFE4E8] flex items-center gap-1 whitespace-nowrap">
+                                    ▶ Mulai
+                                </div>
                             </div>
                         </div>
                         
                         <div class="pl-8 flex items-center justify-between gap-4">
-                            <!-- Progress Bar -->
                             <div class="w-full">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-[9px] font-bold text-gray-400">Progress</span>
-                                    <span class="text-[9px] font-bold text-gray-600">{{ $progressVal }}%</span>
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="text-[10px] font-extrabold tracking-wider uppercase text-gray-400">Progress</span>
+                                    <span class="text-[10px] font-extrabold text-gray-600">{{ $progressVal }}%</span>
                                 </div>
-                                <div class="w-full bg-gray-100 rounded-full h-1">
-                                    <div class="{{ $progressColor }} h-1 rounded-full transition-all duration-300" style="width: {{ $progressVal }}%"></div>
+                                <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                    <div class="{{ $progressColor }} h-full rounded-full transition-all duration-300 relative" style="width: {{ $progressVal }}%">
+                                        <div class="absolute top-0 bottom-0 left-0 right-0 bg-white/20 w-full animate-pulse"></div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Pomodoro Info -->
-                            <span class="text-[10px] font-bold text-gray-500 whitespace-nowrap flex items-center gap-1 pt-2">
-                                🍅 {{ $task->completed_pomodoros }}/{{ $task->estimated_pomodoros }}
-                            </span>
+                            <div class="flex flex-col items-end shrink-0 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm group-hover:border-red-100 transition-colors">
+                                <span class="text-sm font-black text-gray-700 flex items-center gap-1.5">
+                                    <span class="text-xl">🍅</span> {{ $task->completed_pomodoros }}<span class="text-gray-400 font-bold">/{{ $task->estimated_pomodoros }}</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 @empty

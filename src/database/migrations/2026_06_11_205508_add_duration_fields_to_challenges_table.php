@@ -8,10 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('challenges', function (Blueprint $table) {
-            $table->integer('duration_value')->default(1)->after('target_hours');
-            $table->enum('duration_unit', ['days', 'weeks', 'months'])->default('weeks')->after('duration_value');
-        });
+        if (!Schema::hasColumn('challenges', 'duration_value')) {
+            Schema::table('challenges', function (Blueprint $table) {
+                $table->integer('duration_value')->default(1)->after('target_hours');
+                $table->enum('duration_unit', ['days', 'weeks', 'months'])->default('weeks')->after('duration_value');
+            });
+        }
     }
 
     public function down(): void

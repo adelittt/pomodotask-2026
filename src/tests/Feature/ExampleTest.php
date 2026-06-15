@@ -1,7 +1,7 @@
 <?php
 
-test('the application redirects to dashboard', function () {
+test('the application redirects to login', function () {
     $response = $this->get('/');
 
-    $response->assertRedirect('/dashboard');
+    $response->assertRedirect('/login');
 });

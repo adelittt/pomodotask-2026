@@ -29,5 +29,9 @@
         @livewire('dashboard-statistic')
     </div>
 
+    <div x-show="activeTab === 'notifications'" style="display: none;" x-transition.fade.duration.200ms>
+        @livewire('notification-list')
+    </div>
+
 </div>
 @endsection

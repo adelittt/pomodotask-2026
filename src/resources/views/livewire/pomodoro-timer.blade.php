@@ -48,12 +48,20 @@
             <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Fokus Pada Tugas:</label>
             <select x-model="activeTaskId" :disabled="isPlaying"
                 class="w-full bg-[#FFFDF6] border border-pastel-peach/40 focus:border-pastel-blue rounded-xl p-3 text-sm focus:outline-none transition {{ $activeTaskId ? 'border-pastel-blue' : '' }}">
-                <option value="">-- Hanya Timer Mandiri --</option>
-                @foreach($tasks as $task)
-                    <option value="{{ $task->id }}">
-                        {{ $task->title }} (🍅 {{ $task->completed_pomodoros }}/{{ $task->estimated_pomodoros }})
-                    </option>
-                @endforeach
+                <option value="">-- Pilih Tugas atau Kategori --</option>
+                <optgroup label="Tugas Aktif">
+                    @foreach($tasks as $task)
+                        <option value="{{ $task->id }}">
+                            {{ $task->title }} (🍅 {{ $task->completed_pomodoros }}/{{ $task->estimated_pomodoros }})
+                        </option>
+                    @endforeach
+                </optgroup>
+                <optgroup label="Kategori Mandiri">
+                    <option value="Belajar">Belajar</option>
+                    <option value="Kerja">Kerja</option>
+                    <option value="Proyek">Proyek</option>
+                    <option value="Lainnya">Lainnya</option>
+                </optgroup>
             </select>
         </div>
 
