@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TaskReminderMail extends Mailable implements ShouldQueue
+class TaskOverdueMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -21,14 +21,14 @@ class TaskReminderMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pengingat: Tugas "' . $task->title . '" jatuh tempo besok',
+            subject: 'Peringatan: Tugas "' . $task->title . '" sudah melewati batas waktu',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.tasks.reminder',
+            view: 'emails.tasks.overdue',
             with: [
                 'taskName' => $this->task->title,
                 'deadline' => $this->task->due_date,

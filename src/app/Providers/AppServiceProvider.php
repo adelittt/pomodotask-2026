@@ -45,5 +45,7 @@ class AppServiceProvider extends ServiceProvider
         MountableAction::configureUsing(function (MountableAction $action) {
             $action->modalFooterActionsAlignment(Alignment::Right);
         });
+
+        \App\Models\Task::observe(\App\Observers\TaskObserver::class);
     }
 }

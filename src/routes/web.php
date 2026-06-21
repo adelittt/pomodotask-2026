@@ -24,6 +24,45 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
 
+Route::get('/auth/google', function () {
+    session(['google_auth_intent' => request('intent', 'login')]);
+    return \Laravel\Socialite\Facades\Socialite::driver('google')->stateless()->redirect();
+})->name('auth.google');
+
+Route::get('/auth/google/callback', [\App\Actions\Auth\LoginWithGoogleAction::class, 'execute']);
+
+Route::get('/register/google/complete', function () {
+    if (!session()->has('google_register_info')) {
+        return redirect('/register');
+    }
+    return view('auth.register-google-complete');
+})->name('register.google.complete');
+
+Route::post('/register/google/complete', [\App\Http\Controllers\Auth\RegisterGoogleController::class, 'store'])->name('register.google.store');
+
+Route::get('/auth/google/callback', [\App\Actions\Auth\LoginWithGoogleAction::class, 'execute']);
+
+Route::get('/auth/google/calendar', function () {
+    return \Laravel\Socialite\Facades\Socialite::driver('google')
+        ->scopes(['https://www.googleapis.com/auth/calendar'])
+        ->with(['access_type' => 'offline', 'prompt' => 'consent'])
+        ->redirect();
+})->name('auth.google.calendar');
+
+Route::get('/auth/google/calendar/callback', function () {
+    $googleUser = \Laravel\Socialite\Facades\Socialite::driver('google')->user();
+    
+    if (auth()->check()) {
+        auth()->user()->update([
+            'google_calendar_token' => $googleUser->token,
+            'google_calendar_refresh_token' => $googleUser->refreshToken,
+        ]);
+        return redirect()->route('dashboard.user')->with('message', 'Google Calendar berhasil dihubungkan.');
+    }
+    
+    return redirect('/login');
+});
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register')->middleware('guest');
@@ -102,5 +141,5 @@ Route::get('/', function () {
         return redirect('/dashboard');
     }
 
-    return redirect('/login');
+    return view('welcome');
 });
