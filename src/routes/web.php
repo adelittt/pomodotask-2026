@@ -68,16 +68,19 @@ Route::get('/register', function () {
 })->name('register')->middleware('guest');
 
 Route::post('/login', function (\Illuminate\Http\Request $request) {
+    \Illuminate\Support\Facades\Log::info("Login attempt received for: " . $request->input('email'));
     $credentials = $request->validate([
         'email' => ['required', 'email'],
         'password' => ['required'],
     ]);
 
     if (auth()->attempt($credentials)) {
-        $request->session()->regenerate();
+        \Illuminate\Support\Facades\Log::info("Login success for: " . $credentials['email']);
+        // $request->session()->regenerate();
         
         // Prevent admin from using user login panel
         if (auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('admin')) {
+            \Illuminate\Support\Facades\Log::info("Login blocked for admin: " . $credentials['email']);
             auth()->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -86,9 +89,11 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
             ])->onlyInput('email');
         }
         
+        \Illuminate\Support\Facades\Log::info("Redirecting to dashboard for: " . $credentials['email']);
         return redirect('/dashboard');
     }
 
+    \Illuminate\Support\Facades\Log::info("Login failed (wrong credentials) for: " . $credentials['email']);
     return back()->withErrors([
         'email' => 'Kredensial yang diberikan tidak cocok dengan data kami.',
     ])->onlyInput('email');
@@ -142,4 +147,13 @@ Route::get('/', function () {
     }
 
     return view('welcome');
+});
+
+Route::get('/debug-session', function () {
+    session(['test_var' => 'It works!']);
+    return redirect('/test-session');
+});
+
+Route::get('/test-session', function () {
+    return 'Session status: ' . session('test_var', 'FAILED - Session not persisting');
 });

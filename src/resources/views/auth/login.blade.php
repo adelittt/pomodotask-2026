@@ -66,6 +66,12 @@
                 <p class="text-sm text-gray-500 font-semibold mt-2">Masuk untuk melanjutkan ke Dashboard</p>
             </div>
 
+            @if (session('message'))
+                <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 text-sm font-semibold text-center">
+                    {{ session('message') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('login') }}" class="space-y-5">
                 @csrf
 

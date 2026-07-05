@@ -28,8 +28,8 @@ class LoginWithGoogleAction
                     if (!$user->google_id) {
                         $user->update(['google_id' => $googleUser->id]);
                     }
-                    Auth::login($user);
-                    return redirect()->intended('/dashboard');
+                    // User wants to enter password manually after Google verification
+                    return redirect('/login')->withInput(['email' => $googleUser->email])->with('message', 'Akun sudah terdaftar. Silakan masukkan kata sandi Anda untuk masuk ke Dashboard.');
                 } else {
                     // Not registered yet, save to session and redirect to complete register
                     session(['google_register_info' => [
@@ -48,8 +48,8 @@ class LoginWithGoogleAction
                             'google_id' => $googleUser->id,
                         ]);
                     }
-                    Auth::login($user);
-                    return redirect()->intended('/dashboard');
+                    // User wants to enter password manually after Google verification
+                    return redirect('/login')->withInput(['email' => $googleUser->email])->with('message', 'Akun Google berhasil dikonfirmasi. Silakan masukkan kata sandi Anda untuk masuk ke Dashboard.');
                 } else {
                     // Not registered yet, cannot login
                     return redirect('/login')->withErrors(['email' => 'Akun Google belum terdaftar di sistem. Silakan register terlebih dahulu.']);

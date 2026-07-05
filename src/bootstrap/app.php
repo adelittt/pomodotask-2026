@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (\Illuminate\Http\Request $request) => 
             $request->is('admin*') ? route('filament.admin.auth.login') : route('login')
         );
+        $middleware->validateCsrfTokens(except: [
+            '/login'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

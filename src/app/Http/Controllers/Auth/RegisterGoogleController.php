@@ -36,6 +36,7 @@ class RegisterGoogleController extends Controller
         session()->forget('google_register_info');
 
         Auth::login($user);
+        session()->regenerate();
 
         return redirect('/dashboard');
     }
