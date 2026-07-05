@@ -62,12 +62,15 @@
         /* Tomato Animation */
         .tomato-bounce {
             display: inline-block;
-            font-size: 14rem;
+            font-size: 10rem;
             animation: bounce-float 3s ease-in-out infinite;
             filter: drop-shadow(0 20px 20px rgba(0,0,0,0.15));
         }
 
         @media (min-width: 640px) {
+            .tomato-bounce { font-size: 14rem; }
+        }
+        @media (min-width: 768px) {
             .tomato-bounce { font-size: 18rem; }
         }
 
@@ -132,7 +135,7 @@
         
         <!-- Navbar -->
         <nav class="bg-green w-full mt-4">
-            <div class="max-w-4xl mx-auto px-4 flex flex-wrap justify-center py-3 text-dark text-xs font-bold tracking-widest uppercase" style="gap: 2rem;">
+            <div class="max-w-4xl mx-auto px-4 flex flex-wrap justify-center py-3 text-dark text-xs font-bold tracking-widest uppercase gap-4 sm:gap-8">
                 <a href="#" class="hover:text-white transition">HOME</a>
                 <a href="#about" class="hover:text-white transition">ABOUT</a>
                 <a href="#features" class="hover:text-white transition">FEATURES</a>
@@ -165,9 +168,9 @@
             </div>
 
             <!-- Right: Text Content -->
-            <div class="text-center md:text-left flex flex-col items-center md:items-start pl-0 md:pl-12">
+            <div class="text-center md:text-left flex flex-col items-center md:items-start pl-0 md:pl-12 mt-8 md:mt-0">
                 <p class="text-[#f98cb6] font-bold tracking-widest uppercase mb-2 text-sm">PomoTasky Aplikasi Manajemen Tugas</p>
-                <h2 class="font-coquette text-dark mb-4" style="font-size: 3.5rem; line-height: 1.1;">
+                <h2 class="font-coquette text-dark mb-4 text-4xl sm:text-5xl md:text-[3.5rem] leading-tight md:leading-[1.1]">
                     Fokus dan Selesaikan Lebih Banyak Tugas Hari Ini
                 </h2>
                 <div class="wavy-underline w-48 mb-6 mx-auto md:mx-0"></div>
@@ -258,10 +261,10 @@
             <!-- Left Text -->
             <div class="text-center md:text-right flex flex-col items-center md:items-end">
                 <p class="font-coquette text-white text-3xl mb-1 italic">the</p>
-                <h2 class="font-coquette text-5xl sm:text-6xl text-dark leading-tight mb-2">
+                <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-dark leading-tight mb-2">
                     Dreamiest <br>
                 </h2>
-                <h2 class="font-coquette text-5xl sm:text-6xl text-white leading-tight mb-8">
+                <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-white leading-tight mb-8">
                     productivity
                 </h2>
                 
@@ -271,9 +274,9 @@
             </div>
 
             <!-- Right Image/Mockup (Tomato) -->
-            <div class="relative flex justify-center items-center">
+            <div class="relative flex justify-center items-center mt-8 md:mt-0">
                 <div class="relative z-10 flex items-center justify-center">
-                    <span class="tomato-bounce" style="font-size: 12rem;">🍅</span>
+                    <span class="tomato-bounce" style="font-size: clamp(8rem, 30vw, 12rem);">🍅</span>
                 </div>
                 <div class="absolute -bottom-8 -right-4 text-white text-6xl drop-shadow-lg z-20" style="animation: pulse 2s infinite;">♥</div>
                 <div class="absolute top-1/4 -left-8 text-white text-4xl flower-icon drop-shadow-md z-20">✿</div>
@@ -289,7 +292,7 @@
         <div class="absolute top-1/3 right-1/3 text-white text-lg">✨</div>
         
         <p class="text-dark text-xs font-bold tracking-widest uppercase mb-2">JOIN THE LIST <span class="flower-icon inline-block ml-1">✿</span></p>
-        <h2 class="font-coquette text-5xl sm:text-6xl text-dark mb-8">Subscribe</h2>
+        <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-dark mb-8">Subscribe</h2>
         
         <div class="flex justify-center mb-6 z-10 relative">
             <div class="bg-white px-6 py-3 shadow-sm border border-white flex items-center gap-2 cursor-text w-64 justify-center">
