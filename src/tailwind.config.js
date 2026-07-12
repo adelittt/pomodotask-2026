@@ -21,29 +21,28 @@ export default {
     darkMode: "class",
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+            },
             colors: {
-                // Warna pastel kustom untuk PomoTasky
-                pastel: {
-                    pink: '#FFD1DC',
-                    mint: '#C1E1C1',
-                    peach: '#FFDDC1',
-                    lavender: '#E6E6FA',
-                    cream: '#FFFDD0',
-                    blue: '#B5E3F7',
-                    yellow: '#FFF5BA',
+                pomo: {
+                    pink: '#F472B6',
+                    green: '#34D399',
+                    'soft-pink': '#FCE7F3',
+                    'soft-green': '#ECFDF5',
                 },
-                // Override warna primary Filament jika ingin selaras
+                // Override warna primary Filament
                 primary: {
-                    50: '#FFF5F0',
-                    100: '#FFE6DC',
-                    200: '#FFCDB8',
-                    300: '#FFB495',
-                    400: '#FF9B71',
-                    500: '#FF824E',  // oranye pastel
-                    600: '#E5673A',
-                    700: '#CC4E26',
-                    800: '#B23513',
-                    900: '#991C00',
+                    50: '#fdf2f8',
+                    100: '#fce7f3',
+                    200: '#fbcfe8',
+                    300: '#f9a8d4',
+                    400: '#f472b6',
+                    500: '#ec4899',
+                    600: '#db2777',
+                    700: '#be185d',
+                    800: '#9d174d',
+                    900: '#831843',
                 },
             },
         },

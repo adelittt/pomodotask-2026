@@ -1,310 +1,356 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PomoTasky - Productivity & To-Do List</title>
+    <title>PomoTasky - Focus and Get Things Done</title>
     
-    <!-- Import Google Fonts: Quicksand & Fraunces -->
+    <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     @vite('resources/css/app.css')
-    
+
     <style>
         body {
-            font-family: 'Quicksand', sans-serif;
-            color: #333;
+            font-family: 'Outfit', sans-serif;
             background-color: #FAFAFA;
-        }
-        .font-coquette {
-            font-family: 'Fraunces', serif;
-            font-weight: 700;
+            color: #1F2937;
         }
         
-        /* Custom Colors: Green and Pink Theme */
-        .bg-cream { background-color: #fdfaf6; }
-        .bg-pink { background-color: #f9d5e1; } /* Slightly more vibrant pastel pink */
-        .bg-green { background-color: #d1e2a5; } /* Aesthetic pastel green */
-        
-        /* Box Colors */
-        .box-green { background-color: #c9df8a; }
-        .box-pink { background-color: #fdc3da; }
-        .box-purple { background-color: #d2bee5; }
-        .box-blue { background-color: #a8d5e2; }
-        
-        .text-dark { color: #1a1a1a; }
-        
-        .wavy-underline {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Cpath d='M0,10 Q25,20 50,10 T100,10' fill='none' stroke='%23f9d5e1' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x bottom;
-            background-size: 50px 10px;
-            padding-bottom: 12px;
+        .dark body {
+            background-color: #111827;
+            color: #F9FAFB;
         }
 
-        .flower-icon {
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 10px 30px rgba(244, 114, 182, 0.1);
+        }
+
+        .dark .glass-panel {
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .bento-card {
+            border-radius: 1.5rem; /* 3xl */
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .dark .bento-card {
+            background: #1F2937;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 65px rgba(0,0,0,0.08);
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Floating animation for elements in dashboard mockup */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Progress Ring Animation */
+        @keyframes fillProgress {
+            from { stroke-dashoffset: 283; }
+            to { stroke-dashoffset: 31; } /* ~89% of 283 */
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            animation: fillProgress 1.5s ease-out forwards 0.5s;
+        }
+        
+        @keyframes tomatoWiggle {
+            0%, 100% { transform: rotate(-10deg) scale(1); }
+            50% { transform: rotate(10deg) scale(1.1); }
+        }
+        .animate-tomato {
             display: inline-block;
-            animation: spin-slow 12s linear infinite;
-        }
-        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
-
-        /* Morphing shape */
-        .wavy-blob {
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            animation: morph 8s ease-in-out infinite;
-        }
-        
-        @keyframes morph {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-
-        /* Tomato Animation */
-        .tomato-bounce {
-            display: inline-block;
-            font-size: 10rem;
-            animation: bounce-float 3s ease-in-out infinite;
-            filter: drop-shadow(0 20px 20px rgba(0,0,0,0.15));
-        }
-
-        @media (min-width: 640px) {
-            .tomato-bounce { font-size: 14rem; }
-        }
-        @media (min-width: 768px) {
-            .tomato-bounce { font-size: 18rem; }
-        }
-
-        @keyframes bounce-float {
-            0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
-            50% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
-        }
-
-        /* Cute Inner Dashed Border for Features */
-        .inner-dashed {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        .inner-dashed::after {
-            content: '';
-            position: absolute;
-            top: 8px; left: 8px; right: 8px; bottom: 8px;
-            border: 2px dashed rgba(255,255,255,0.7);
-            border-radius: 12px;
-            pointer-events: none;
+            animation: tomatoWiggle 2s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col bg-cream">
+<body class="antialiased min-h-[100dvh] flex flex-col w-full overflow-x-hidden selection:bg-pomo-pink selection:text-white transition-colors duration-300">
     
-    <!-- Announcement Bar -->
-    <div class="bg-pink text-dark text-xs font-bold tracking-widest py-2 text-center uppercase relative z-20">
-        WELCOME TO POMOTASKY - YOUR PRODUCTIVITY BESTIE 🎀
-    </div>
-
-    <!-- Header -->
-    <header class="bg-white py-4 relative z-20">
-        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-            
-            <!-- Search Icon (Left) -->
-            <div class="w-1/4 hidden md:block">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-            
-            <!-- Logo -->
-            <div class="w-full md:w-2/4 text-center">
-                <h1 class="font-coquette text-4xl text-dark flex items-center justify-center gap-1">
-                    PomoTasky<span class="text-[#f98cb6] text-2xl">✿</span>
-                </h1>
-            </div>
-
-            <!-- Icons Top Right -->
-            <div class="w-1/4 hidden md:flex items-center justify-end gap-4 text-sm font-bold tracking-widest uppercase">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="text-gray-500 hover:text-pink-500 transition">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-500 hover:text-pink-500 transition">Login</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="bg-pink text-dark px-5 py-2 rounded-full hover:bg-opacity-80 transition shadow-sm">Register</a>
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b-0">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl animate-tomato drop-shadow-sm">🍅</span>
+                    <span class="text-2xl font-bold tracking-tight">PomoTasky</span>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#features" class="text-gray-600 hover:text-pomo-pink font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Features</a>
+                    
+                    <div class="flex items-center gap-4 border-l border-gray-200 dark:border-gray-700 pl-8">
+                        @if (Route::has('login'))
+                            @auth
+                                <a href="{{ url('/dashboard') }}" class="text-gray-600 hover:text-pomo-pink font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Dashboard</a>
+                            @else
+                                <a href="{{ route('login') }}" class="text-gray-600 hover:text-pomo-pink font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Log in</a>
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}" class="bg-pomo-pink hover:bg-pink-500 text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 active:scale-95 shadow-md shadow-pink-200/50 dark:shadow-none">
+                                        Get Started
+                                    </a>
+                                @endif
+                            @endauth
                         @endif
-                    @endauth
-                @endif
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Navbar -->
-        <nav class="bg-green w-full mt-4">
-            <div class="max-w-4xl mx-auto px-4 flex flex-wrap justify-center py-3 text-dark text-xs font-bold tracking-widest uppercase gap-4 sm:gap-8">
-                <a href="#" class="hover:text-white transition">HOME</a>
-                <a href="#about" class="hover:text-white transition">ABOUT</a>
-                <a href="#features" class="hover:text-white transition">FEATURES</a>
-                <a href="#discover" class="hover:text-white transition">DISCOVER</a>
-                <a href="{{ route('register') }}" class="hover:text-white transition">ACCOUNT</a>
-            </div>
-        </nav>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-h-[500px] sm:min-h-[600px] flex items-center py-12 sm:py-16 overflow-hidden">
-        <!-- Floating Stars/Flowers -->
-        <div class="absolute top-10 left-10 text-[#f98cb6] text-xl opacity-60">✨</div>
-        <div class="absolute top-1/4 right-20 text-[#f98cb6] text-3xl opacity-80 flower-icon">✿</div>
-        <div class="absolute bottom-20 right-1/3 text-white text-4xl opacity-80 flower-icon">✿</div>
-        <div class="absolute top-10 right-1/3 text-green-300 text-xl opacity-80">✨</div>
-        <div class="absolute top-1/2 left-1/3 text-[#f98cb6] text-4xl opacity-40 flower-icon">✿</div>
-
-        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10 w-full">
+    <section class="pt-32 pb-20 md:pt-40 md:pb-28 px-5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        
+        <!-- Left Text -->
+        <div class="flex-1 w-full text-left z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pomo-soft-pink text-pomo-pink font-semibold text-sm mb-6 animate-fade-in-up dark:bg-pink-900/30">
+                <i class="ph ph-sparkle"></i>
+                Focus your mind, complete your tasks
+            </div>
             
-            <!-- Left: Animated Tomato -->
-            <div class="flex justify-center items-center relative">
-                <!-- Background Blob -->
-                <div class="absolute inset-0 bg-white/50 w-[90%] h-[90%] m-auto wavy-blob z-0"></div>
-                <div class="absolute inset-0 bg-pink/20 w-[100%] h-[100%] m-auto wavy-blob z-0" style="animation-duration: 12s; animation-direction: reverse;"></div>
-                
-                <div class="relative z-10 flex items-center justify-center">
-                    <span class="tomato-bounce">🍅</span>
-                </div>
-            </div>
-
-            <!-- Right: Text Content -->
-            <div class="text-center md:text-left flex flex-col items-center md:items-start pl-0 md:pl-12 mt-8 md:mt-0">
-                <p class="text-[#f98cb6] font-bold tracking-widest uppercase mb-2 text-sm">PomoTasky Aplikasi Manajemen Tugas</p>
-                <h2 class="font-coquette text-dark mb-4 text-4xl sm:text-5xl md:text-[3.5rem] leading-tight md:leading-[1.1]">
-                    Fokus dan Selesaikan Lebih Banyak Tugas Hari Ini
-                </h2>
-                <div class="wavy-underline w-48 mb-6 mx-auto md:mx-0"></div>
-                <p class="text-gray-600 mb-8 max-w-lg text-lg leading-relaxed">
-                    Tingkatkan produktivitas Anda dengan perpaduan sempurna antara teknik Pomodoro, manajemen tugas yang rapi, dan sistem pencapaian yang menyenangkan.
-                </p>
-                
-                <a href="{{ route('register') }}" class="bg-pink text-dark font-bold tracking-widest text-sm uppercase px-8 py-4 rounded-full hover:bg-opacity-80 transition transform hover:scale-105 shadow-sm inline-block mt-2">
-                    EXPLORE NOW
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-16 relative z-10 bg-white">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="font-coquette text-4xl sm:text-5xl text-dark mb-6">What is PomoTasky? 🎀</h2>
-            <p class="text-gray-600 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
-                PomoTasky is your aesthetic productivity companion! We combine the power of the <strong>Pomodoro Technique</strong> with an easy-to-use <strong>To-Do List</strong> to help you stay focused, organized, and motivated. Say goodbye to boring task managers and hello to a cute, stress-free workflow!
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-in-up delay-100">
+                Master your time.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pomo-pink to-pomo-green">Achieve more.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-8 mb-10 max-w-lg animate-fade-in-up delay-200">
+                A premium productivity app that combines the Pomodoro technique with smart task management. Designed for students, freelancers, and professionals.
             </p>
-            <div class="flex justify-center gap-4 text-3xl opacity-80">
-                <span>🍅</span>
-                <span>✨</span>
-                <span>📝</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Detailed Features Grid -->
-    <section id="features" class="py-20 relative z-10 bg-cream">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <h2 class="font-coquette text-4xl sm:text-5xl text-dark mb-4">Cute Features ✨</h2>
-                <p class="text-gray-500">Everything you need to be productive and happy.</p>
-            </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                
-                <!-- Feature 1: Timer -->
-                <div class="box-green inner-dashed p-8 flex flex-col items-center text-center shadow-sm group hover:-translate-y-2 transition-transform duration-300">
-                    <div class="text-5xl text-white mb-4 drop-shadow-sm group-hover:scale-110 transition">🍅</div>
-                    <h3 class="font-coquette text-white text-2xl leading-tight mb-3 drop-shadow-sm">Pomodoro<br>Timer</h3>
-                    <p class="text-white/90 text-sm font-medium">Stay locked in with customizable focus sessions and short breaks.</p>
-                    <div class="absolute top-3 left-3 text-white text-xl opacity-60">🌿</div>
-                </div>
-
-                <!-- Feature 2: To-Do -->
-                <div class="box-pink inner-dashed p-8 flex flex-col items-center text-center shadow-sm group hover:-translate-y-2 transition-transform duration-300">
-                    <div class="text-5xl text-white mb-4 drop-shadow-sm group-hover:scale-110 transition">📝</div>
-                    <h3 class="font-coquette text-white text-2xl leading-tight mb-3 drop-shadow-sm">Task<br>Manager</h3>
-                    <p class="text-white/90 text-sm font-medium">Organize your daily tasks easily. Tick them off and feel the satisfaction!</p>
-                    <div class="absolute top-3 right-3 text-white text-xl opacity-60">♥</div>
-                </div>
-
-                <!-- Feature 3: Calendar -->
-                <div class="box-purple inner-dashed p-8 flex flex-col items-center text-center shadow-sm group hover:-translate-y-2 transition-transform duration-300">
-                    <div class="text-5xl text-white mb-4 drop-shadow-sm group-hover:scale-110 transition">📅</div>
-                    <h3 class="font-coquette text-white text-2xl leading-tight mb-3 drop-shadow-sm">Google<br>Calendar</h3>
-                    <p class="text-white/90 text-sm font-medium">Sync seamlessly with Google Calendar to manage all your events in one place.</p>
-                </div>
-
-                <!-- Feature 4: Stats -->
-                <div class="box-blue inner-dashed p-8 flex flex-col items-center text-center shadow-sm group hover:-translate-y-2 transition-transform duration-300">
-                    <div class="text-5xl text-white mb-4 drop-shadow-sm group-hover:scale-110 transition">🏆</div>
-                    <h3 class="font-coquette text-white text-2xl leading-tight mb-3 drop-shadow-sm">Track<br>Stats</h3>
-                    <p class="text-white/90 text-sm font-medium">Monitor your productivity over time and earn cool badges for your hard work!</p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Collection Section -->
-    <section id="discover" class="bg-pink relative py-20 overflow-hidden">
-        <!-- Wavy top overlay -->
-        <div class="absolute -top-1 left-0 w-full overflow-hidden leading-none">
-            <svg class="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="fill-cream" style="fill: #fdfaf6;"></path>
-            </svg>
-        </div>
-        
-        <div class="absolute top-20 left-10 text-white text-4xl opacity-50 flower-icon">✿</div>
-        <div class="absolute bottom-10 right-10 text-white text-4xl opacity-50 flower-icon">✿</div>
-
-        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10 pt-10">
-            
-            <!-- Left Text -->
-            <div class="text-center md:text-right flex flex-col items-center md:items-end">
-                <p class="font-coquette text-white text-3xl mb-1 italic">the</p>
-                <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-dark leading-tight mb-2">
-                    Dreamiest <br>
-                </h2>
-                <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-white leading-tight mb-8">
-                    productivity
-                </h2>
-                
-                <a href="{{ route('register') }}" class="bg-green text-dark font-bold tracking-widest text-xs uppercase px-6 py-2.5 rounded-full hover:bg-opacity-80 transition shadow-sm inline-block">
-                    GET THE APP
+            <div class="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up delay-300">
+                <a href="{{ route('register') }}" class="w-full sm:w-auto text-center bg-pomo-pink hover:bg-pink-500 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-pink-200/50 dark:shadow-none flex justify-center items-center gap-2">
+                    Start Focusing <i class="ph ph-arrow-right font-bold"></i>
+                </a>
+                <a href="#features" class="w-full sm:w-auto text-center px-8 py-4 rounded-full font-semibold text-lg border-2 border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600 transition-all text-gray-700 dark:text-gray-300 flex justify-center items-center gap-2">
+                    <i class="ph ph-play-circle text-xl"></i> See How It Works
                 </a>
             </div>
+        </div>
 
-            <!-- Right Image/Mockup (Tomato) -->
-            <div class="relative flex justify-center items-center mt-8 md:mt-0">
-                <div class="relative z-10 flex items-center justify-center">
-                    <span class="tomato-bounce" style="font-size: clamp(8rem, 30vw, 12rem);">🍅</span>
+        <!-- Right Dashboard Mockup -->
+        <div class="flex-1 w-full relative animate-fade-in-up delay-300">
+            <!-- Background glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[400px] max-h-[400px] bg-gradient-to-tr from-pomo-pink/20 to-pomo-green/20 blur-3xl rounded-full -z-10"></div>
+            
+            <!-- Main Mockup -->
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 animate-float relative z-10 w-full overflow-hidden">
+                <!-- Top Bar -->
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider dark:text-gray-400">Today's Focus</h3>
+                        <div class="text-4xl font-bold font-mono tracking-tight text-gray-900 dark:text-white mt-1">25:00</div>
+                    </div>
+                    <div class="h-12 w-12 rounded-full bg-pomo-soft-green flex items-center justify-center text-pomo-green">
+                        <i class="ph ph-timer text-2xl"></i>
+                    </div>
                 </div>
-                <div class="absolute -bottom-8 -right-4 text-white text-6xl drop-shadow-lg z-20" style="animation: pulse 2s infinite;">♥</div>
-                <div class="absolute top-1/4 -left-8 text-white text-4xl flower-icon drop-shadow-md z-20">✿</div>
+
+                <!-- Progress Ring -->
+                <div class="flex justify-center mb-8 relative">
+                    <svg class="w-40 h-40" viewBox="0 0 100 100">
+                        <!-- Background circle -->
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-gray-100 dark:text-gray-800" />
+                        <!-- Progress circle -->
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#F472B6" stroke-width="8" stroke-linecap="round" class="progress-ring-circle" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-bold">89%</span>
+                        <span class="text-xs text-gray-500">Completed</span>
+                    </div>
+                </div>
+
+                <!-- Today's Tasks -->
+                <div>
+                    <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                        <i class="ph-fill ph-list-checks text-pomo-pink"></i> Today's Tasks
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                            <div class="w-5 h-5 rounded-full border-2 border-pomo-green flex items-center justify-center bg-pomo-green text-white">
+                                <i class="ph ph-check text-xs"></i>
+                            </div>
+                            <span class="line-through text-gray-400 dark:text-gray-500">Design UI System</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700">
+                            <div class="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
+                            <span class="font-medium">Write Article Draft</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                            <div class="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
+                            <span class="font-medium text-gray-600 dark:text-gray-300">Client Meeting</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating Stats Badge -->
+                <div class="absolute -right-6 -bottom-6 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-gray-100 dark:border-gray-700 flex items-center gap-4 animate-float" style="animation-delay: 1s;">
+                    <div class="bg-pomo-soft-pink w-10 h-10 rounded-full flex items-center justify-center text-pomo-pink">
+                        <i class="ph-fill ph-fire text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold">Current Streak</div>
+                        <div class="text-xl font-bold">12 Days</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Subscribe / Footer Banner -->
-    <section class="bg-green py-20 text-center relative overflow-hidden flex-grow flex flex-col justify-center">
-        <!-- Floating decors -->
-        <div class="absolute top-10 left-1/4 text-white text-2xl opacity-70 flower-icon">✿</div>
-        <div class="absolute bottom-12 right-1/4 text-white text-2xl opacity-70 flower-icon">✿</div>
-        <div class="absolute top-1/3 right-1/3 text-white text-lg">✨</div>
-        
-        <p class="text-dark text-xs font-bold tracking-widest uppercase mb-2">JOIN THE LIST <span class="flower-icon inline-block ml-1">✿</span></p>
-        <h2 class="font-coquette text-4xl sm:text-5xl md:text-6xl text-dark mb-8">Subscribe</h2>
-        
-        <div class="flex justify-center mb-6 z-10 relative">
-            <div class="bg-white px-6 py-3 shadow-sm border border-white flex items-center gap-2 cursor-text w-64 justify-center">
-                <span class="text-green-500">💌</span>
+    <!-- Bento Features Section -->
+    <section id="features" class="py-20 md:py-28 bg-gray-50 dark:bg-gray-900/50">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Everything you need to focus.</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    A carefully curated set of tools designed to remove distractions and help you achieve deep work states effortlessly.
+                </p>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                
+                <!-- Big Feature 1 -->
+                <div class="bento-card md:col-span-2 flex flex-col justify-between overflow-hidden relative group">
+                    <div class="relative z-10 mb-8">
+                        <div class="w-12 h-12 rounded-2xl bg-pomo-soft-green text-pomo-green flex items-center justify-center mb-6">
+                            <i class="ph-fill ph-timer text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Customizable Timer</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Set your ideal work intervals and break durations. The timer stays in sync across all your devices, so you never lose track.</p>
+                    </div>
+                    <!-- Decorative Graphic -->
+                    <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-pomo-green/10 rounded-full blur-3xl group-hover:bg-pomo-green/20 transition-colors"></div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bento-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pomo-soft-pink text-pomo-pink flex items-center justify-center mb-6">
+                            <i class="ph-fill ph-chart-line-up text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Rich Analytics</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Visualize your productivity trends, peak focus hours, and completion rates over time.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bento-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 dark:bg-blue-900/30 flex items-center justify-center mb-6">
+                            <i class="ph-fill ph-calendar-blank text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Google Calendar</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Two-way sync with Google Calendar ensures your events and tasks live in harmony.</p>
+                    </div>
+                </div>
+
+                <!-- Big Feature 4 -->
+                <div class="bento-card md:col-span-2 flex flex-col md:flex-row items-center gap-8 bg-gray-900 text-white dark:bg-gray-800">
+                    <div class="flex-1">
+                        <div class="w-12 h-12 rounded-2xl bg-white/10 text-white flex items-center justify-center mb-6">
+                            <i class="ph-fill ph-moon-stars text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Focus Mode</h3>
+                        <p class="text-gray-400">Enter a distraction-free full-screen environment. Block notifications and immerse yourself fully into the current task at hand.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
-        
-        <p class="text-xs text-dark/80 font-medium max-w-sm mx-auto z-10 relative">Receive exclusive updates on new features and aesthetic drops!</p>
     </section>
 
-    <footer class="bg-green py-4 text-center border-t border-white/30">
-        <p class="text-dark/50 text-xs font-bold tracking-widest uppercase">© 2026 PomoTasky Team</p>
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="ph-fill ph-check-circle text-2xl text-pomo-pink"></i>
+                        <span class="text-xl font-bold">PomoTasky</span>
+                    </div>
+                    <p class="text-gray-500 text-sm">Elevating productivity through mindful focus and elegant design.</p>
+                </div>
+                <!-- Links -->
+                <div>
+                    <h4 class="font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Download Apps</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Pomodoro Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-pomo-pink transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center text-sm text-gray-400 pt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p>&copy; 2026 PomoTasky. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"><i class="ph-fill ph-twitter-logo text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"><i class="ph-fill ph-github-logo text-xl"></i></a>
+                </div>
+            </div>
+        </div>
     </footer>
 
 </body>

@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
         $middleware->trustProxies(at: '*');
         $middleware->redirectGuestsTo(fn (\Illuminate\Http\Request $request) => 
             $request->is('admin*') ? route('filament.admin.auth.login') : route('login')

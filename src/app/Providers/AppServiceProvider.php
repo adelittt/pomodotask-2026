@@ -47,5 +47,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \App\Models\Task::observe(\App\Observers\TaskObserver::class);
+
+
+
+        Gate::define('viewApiDocs', function (\App\Models\User $user) {
+            return $user->hasRole('super_admin') || in_array($user->email, ['admin@admin.com']);
+        });
     }
 }
