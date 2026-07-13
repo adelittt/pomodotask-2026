@@ -47,13 +47,35 @@ class DashboardHome extends Component
             ->latest()
             ->get();
 
+        // 5. Data Fokus Mingguan (Senin-Minggu)
+        $weeklyFocus = [];
+        $startOfWeek = now()->startOfWeek(); // Senin
+        
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startOfWeek->copy()->addDays($i);
+            $dayNames = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+            $dayName = $dayNames[$i];
+            
+            $duration = PomodoroSession::where('user_id', $userId)
+                ->whereDate('completed_at', $date->format('Y-m-d'))
+                ->sum('duration'); // dalam menit
+                
+            $weeklyFocus[] = [
+                'day' => $dayName,
+                'duration' => $duration,
+                // Maksimal 8 jam = 480 menit di chart (karena Y axis max 8h)
+                'percentage' => min(100, ($duration > 0 ? ($duration / 480) * 100 : 5)) // minimal 5% agar bar terlihat sedikit
+            ];
+        }
+
         return view('livewire.dashboard-home', compact(
             'tasksCompleted', 
             'totalPomodorosReal', 
             'waktuFokusJam', 
             'waktuFokusMenit', 
             'upcomingTasks',
-            'tasks'
+            'tasks',
+            'weeklyFocus'
         ));
     }
 

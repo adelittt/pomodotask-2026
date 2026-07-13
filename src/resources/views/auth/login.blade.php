@@ -93,12 +93,16 @@
                     @enderror
                 </div>
 
-                <!-- Remember Me -->
-                <div class="block">
+                <div class="flex items-center justify-between">
+                    <!-- Remember Me -->
                     <label for="remember_me" class="inline-flex items-center">
                         <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-emerald-500 shadow-sm focus:border-emerald-300 focus:ring focus:ring-emerald-200 focus:ring-opacity-50" name="remember">
                         <span class="ml-2 text-sm text-gray-600 font-semibold">Ingat Saya</span>
                     </label>
+                    
+                    <a href="{{ route('password.request') }}" class="text-sm font-semibold text-pink-accent hover:underline">
+                        Lupa Password?
+                    </a>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">

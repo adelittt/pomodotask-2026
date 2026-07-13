@@ -99,10 +99,51 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
     ])->onlyInput('email');
 });
 
+// Forgot Password Routes
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email' => ['required', 'email']]);
+    $status = \Illuminate\Support\Facades\Password::sendResetLink($request->only('email'));
+    
+    return $status === \Illuminate\Support\Facades\Password::RESET_LINK_SENT
+        ? back()->with(['status' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'token' => ['required'],
+        'email' => ['required', 'email'],
+        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+    ]);
+
+    $status = \Illuminate\Support\Facades\Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            $user->forceFill([
+                'password' => \Illuminate\Support\Facades\Hash::make($password)
+            ])->setRememberToken(\Illuminate\Support\Str::random(60));
+            $user->save();
+            event(new \Illuminate\Auth\Events\PasswordReset($user));
+        }
+    );
+
+    return $status === \Illuminate\Support\Facades\Password::PASSWORD_RESET
+        ? redirect('/login')->with('message', __($status))
+        : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');
+
 Route::post('/register', function (\Illuminate\Http\Request $request) {
     $request->validate([
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users', new \App\Rules\NoDummyEmail],
         'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
     ]);
 

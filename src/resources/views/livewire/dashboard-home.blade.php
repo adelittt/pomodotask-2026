@@ -219,14 +219,17 @@
                     <div class="w-full border-b border-gray-100 flex items-center gap-3"><span class="w-4">2h</span></div>
                     <div class="w-full border-b border-gray-100 flex items-center gap-3"><span class="w-4">0m</span></div>
                 </div>
-                <!-- Mock Bars -->
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[60%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Sen</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[50%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Sel</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[65%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Rab</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[45%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Kam</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[70%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Jum</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[90%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Sab</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
-                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg h-[40%] flex flex-col justify-end items-center mx-auto"><span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">Min</span><div class="w-2.5 h-2.5 rounded-full bg-green-400 absolute -top-1.5 border-2 border-white"></div></div>
+                <!-- Real Bars based on $weeklyFocus -->
+                @foreach($weeklyFocus as $focus)
+                <div class="relative z-10 w-8 bg-[#FFD1DC] rounded-t-lg flex flex-col justify-end items-center mx-auto transition-all duration-500" style="height: {{ $focus['percentage'] }}%;">
+                    <!-- Tooltip (Opsional, untuk melihat nilai) -->
+                    <div class="absolute -top-8 bg-gray-800 text-white text-[10px] py-1 px-2 rounded opacity-0 hover:opacity-100 cursor-default">
+                        {{ floor($focus['duration'] / 60) }}h {{ $focus['duration'] % 60 }}m
+                    </div>
+                    <span class="absolute -bottom-7 text-[11px] text-gray-500 font-bold">{{ $focus['day'] }}</span>
+                    <div class="w-2.5 h-2.5 rounded-full {{ $focus['duration'] > 0 ? 'bg-green-400' : 'bg-gray-300' }} absolute -top-1.5 border-2 border-white"></div>
+                </div>
+                @endforeach
             </div>
         </div>
 
