@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+<<<<<<< Updated upstream
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -87,3 +88,18 @@ class TaskController extends Controller
         return response()->json(null, 204);
     }
 }
+=======
+use Illuminate\Http\JsonResponse;
+
+class TaskController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Data tugas berhasil diambil',
+            'data' => Task::all(),
+        ]);
+    }
+}
+>>>>>>> Stashed changes

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< Updated upstream
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\PomodoroSessionController;
@@ -20,3 +21,8 @@ Route::get('/status', function () {
         'message' => 'API is working'
     ]);
 });
+=======
+use App\Http\Controllers\Api\TaskController;
+
+Route::get('/tasks', [TaskController::class, 'index']);
+>>>>>>> Stashed changes

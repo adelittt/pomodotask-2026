@@ -34,13 +34,35 @@
     @livewireStyles
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <div x-data="{ activeTab: 'home', sidebarOpen: true }" @change-tab.window="activeTab = $event.detail" class="flex h-screen bg-[#FDF8F5] relative">
+    <div x-data="{ 
+        activeTab: 'home', 
+        sidebarOpen: window.innerWidth >= 768,
+        mobileMenuOpen: false
+    }" @resize.window="if (window.innerWidth >= 768) mobileMenuOpen = false" 
+    @change-tab.window="activeTab = $event.detail" class="flex flex-col md:flex-row h-screen bg-[#FDF8F5] relative overflow-hidden">
         
+        <!-- Mobile Header -->
+        <header class="md:hidden flex items-center justify-between bg-white px-4 py-3 border-b border-red-50 z-30 shrink-0 shadow-sm">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl drop-shadow-sm flex-shrink-0">🍅</span>
+                <span class="text-xl font-extrabold text-gray-800 tracking-tight whitespace-nowrap">Pomo<span class="text-red-400">Tasky</span></span>
+            </div>
+            <button @click="mobileMenuOpen = !mobileMenuOpen; sidebarOpen = true" class="text-gray-500 hover:text-red-500 focus:outline-none p-2 rounded-lg bg-gray-50">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </header>
+
+        <!-- Mobile Overlay -->
+        <div x-show="mobileMenuOpen" style="display: none;" @click="mobileMenuOpen = false" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 md:hidden" x-transition.opacity></div>
+
         <!-- Sidebar -->
-        <aside :class="sidebarOpen ? 'w-72' : 'w-24'" class="bg-white border-r border-red-50 flex flex-col justify-between sidebar-scroll h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-40 shrink-0 transition-all duration-300 ease-in-out relative group">
+        <aside :class="[
+            sidebarOpen ? 'w-72' : 'w-24',
+            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        ]" class="fixed md:static inset-y-0 left-0 bg-white border-r border-red-50 flex flex-col justify-between sidebar-scroll h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-50 shrink-0 transition-all duration-300 ease-in-out group">
             <div>
                 <!-- Toggle Button Inside Sidebar -->
-                <button @click="sidebarOpen = !sidebarOpen" class="absolute top-8 -right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 bg-white border border-gray-100 rounded-full shadow-sm transition-transform z-50" :class="!sidebarOpen ? 'rotate-180' : ''">
+                <button @click="sidebarOpen = !sidebarOpen" class="hidden md:flex absolute top-8 -right-4 w-8 h-8 items-center justify-center text-gray-400 hover:text-red-500 bg-white border border-gray-100 rounded-full shadow-sm transition-transform z-50" :class="!sidebarOpen ? 'rotate-180' : ''">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                 </button>
                 <!-- Logo -->
@@ -51,27 +73,27 @@
 
                 <!-- Navigation -->
                 <nav class="px-4 space-y-1.5 mt-2">
-                    <button @click="activeTab = 'home'" :title="!sidebarOpen ? 'Beranda' : ''" :class="[activeTab === 'home' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'home'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Beranda' : ''" :class="[activeTab === 'home' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Beranda</span>
                     </button>
-                    <button @click="activeTab = 'tasks'" :title="!sidebarOpen ? 'Tugas Saya' : ''" :class="[activeTab === 'tasks' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'tasks'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Tugas Saya' : ''" :class="[activeTab === 'tasks' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Tugas Saya</span>
                     </button>
-                    <button @click="activeTab = 'pomodoro'" :title="!sidebarOpen ? 'Pomodoro Timer' : ''" :class="[activeTab === 'pomodoro' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'pomodoro'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Pomodoro Timer' : ''" :class="[activeTab === 'pomodoro' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Pomodoro Timer</span>
                     </button>
-                    <button @click="activeTab = 'challenges'" :title="!sidebarOpen ? 'Tantangan' : ''" :class="[activeTab === 'challenges' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'challenges'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Tantangan' : ''" :class="[activeTab === 'challenges' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Tantangan</span>
                     </button>
-                    <button @click="activeTab = 'badges'" :title="!sidebarOpen ? 'Badge Saya' : ''" :class="[activeTab === 'badges' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'badges'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Badge Saya' : ''" :class="[activeTab === 'badges' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Badge Saya</span>
                     </button>
-                    <button @click="activeTab = 'statistics'" :title="!sidebarOpen ? 'Statistik Fokus' : ''" :class="[activeTab === 'statistics' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
+                    <button @click="activeTab = 'statistics'; mobileMenuOpen = false" :title="!sidebarOpen ? 'Statistik Fokus' : ''" :class="[activeTab === 'statistics' ? 'bg-red-50 text-red-500 font-bold' : 'text-gray-500 hover:bg-gray-50 font-semibold', sidebarOpen ? 'px-4 gap-3' : 'justify-center px-0']" class="w-full flex items-center py-3 rounded-2xl transition-all overflow-hidden relative group">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="whitespace-nowrap">Statistik Fokus</span>
                     </button>
@@ -138,7 +160,7 @@
         </aside>
 
         <!-- Main Content Wrapper -->
-        <main class="flex-1 flex flex-col h-screen overflow-y-auto main-scroll relative" x-data="pomodoroTimerState()">
+        <main class="flex-1 flex flex-col overflow-y-auto main-scroll relative" x-data="pomodoroTimerState()">
             @yield('content')
             {{ $slot ?? '' }}
         </main>
